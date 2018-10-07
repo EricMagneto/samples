@@ -1,0 +1,25 @@
+﻿@page "/cars"
+@layout MainLayout
+@inject AppState state
+
+<div id="search-and-results-area">
+    <SearchView SearchInProgress="state.SearchInProgress" Results="state.RentalCarSearchResults">
+        <SearchContent>
+            <CarRentalSearch OnSearch=state.SearchRentalCars />
+        </SearchContent>
+        <SearchResultItemContent Context="result">
+            <CarRentalSearchResult Item="result" OnAddItinerary="state.AddToShortlist" />
+        </SearchResultItemContent>
+    </SearchView>
+</div>
+<div id="selections-area" class="p-3 pl-4">
+    <Shortlist Items=state.Shortlist />
+</div>
+
+@functions
+{
+    protected override void OnInit()
+    {
+        state.OnChange += StateHasChanged;
+    }
+}

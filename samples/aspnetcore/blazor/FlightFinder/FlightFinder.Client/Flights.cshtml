@@ -1,0 +1,33 @@
+﻿@page "/"
+@layout MainLayout
+@inject AppState state
+
+<div id="search-and-results-area">
+    <SearchView SearchInProgress="state.SearchInProgress"
+                Sort="SortOptions"
+                Results="state.FlightSearchResults">
+        <SearchContent>
+            <FlightSearch OnSearch=state.SearchFlights />
+        </SearchContent>
+        <SearchResultItemContent Context="result">
+            <FlightSearchResult Item="result" OnAddItinerary="state.AddToShortlist" />
+        </SearchResultItemContent>
+    </SearchView>
+</div>
+<div id="selections-area" class="p-3 pl-4">
+    <Shortlist Items=state.Shortlist />
+</div>
+
+@functions
+{
+    static readonly SearchView<FlightItinerary>.SortOrder[] SortOptions = new SearchView<FlightItinerary>.SortOrder[]
+    {
+        new SearchView<FlightItinerary>.SortOrder() { DisplayName = "Cheapest", Sort = r => r.OrderBy(i => i.Price), },
+        new SearchView<FlightItinerary>.SortOrder() { DisplayName = "Quickest", Sort = r => r.OrderBy(i => i.TotalDurationHours), },
+    };
+
+    protected override void OnInit()
+    {
+        state.OnChange += StateHasChanged;
+    }
+}
